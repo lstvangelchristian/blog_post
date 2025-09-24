@@ -14,7 +14,14 @@ class BlogResource extends JsonResource
             'author' => $this->author->username,
             'content' => $this->content,
             'created_at' => $this->created_at,
-            'reactions' => $this->reactions,
+            'reactions' => $this->reactions->map(function ($reaction) {
+                return [
+                    'type_id' => $reaction->type_id,
+                    'user_id' => $reaction->user_id,
+                    'reacted_by' => $reaction->user->username,
+                    'created_at' => $reaction->created_at,
+                ];
+            }),
             'comments' => $this->comments,
         ];
     }

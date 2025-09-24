@@ -54,8 +54,8 @@ export class PublicFeedView {
     })
   }
 
-  formatDate(date) {
-    return `Posted on: ${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')} at ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}:${String(date.getSeconds()).padStart(2,'0')}`;
+  formatDate(action, date) {
+    return `${action} on: ${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')} at ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}:${String(date.getSeconds()).padStart(2,'0')}`;
   }
 
   createReactionButton (reaction, blogId) {
@@ -73,6 +73,22 @@ export class PublicFeedView {
       )
     
     return reactionButton;
+  }
+
+  createCommentButton (message, blogId) {
+    const commentButton = $('<span>', {
+      class: `message-button`,
+      'data-blog-id': blogId,
+      css: { padding: '10px', cursor: 'pointer' }
+    })
+      .append(
+        $('<img>', {
+          src: message,
+          css: { width: '40px', }
+        })
+      )
+    
+    return commentButton;
   }
 
   async renderPublicFeed (blogs) {
@@ -121,7 +137,7 @@ export class PublicFeedView {
             </div>
 
             <div class="w-100 text-end">
-              <span>${this.formatDate(new Date(b.created_at))}</span>
+              <span>${this.formatDate('Posted', new Date(b.created_at))}</span>
             </div>
           </div>
 
@@ -132,7 +148,7 @@ export class PublicFeedView {
 
           <!-- Post Summary -->
           <div class="d-flex mt-3">
-            <div class="w-100 js-view-reactions" style="cursor: pointer;">
+            <div class="w-100 js-view-reactions" style="cursor: pointer;" data-reaction-blog-id="${b.blog_id}">
               <img src="${currentUserReaction ? `${window.reactions[currentUserReaction.type_id - 1].src}` : ''}" style="width: 20px;" class="me-1" onerror="this.style.display='none';">
               <span>Reactions: ${b.reactions.length}</span>
             </div>
@@ -144,8 +160,7 @@ export class PublicFeedView {
             <div class="d-flex">
               <div class="w-100 text-center js-reaction-button-container" data-blog-id="${b.blog_id}"></div>
 
-              <div class="w-100 text-center">
-                <span class="bg-info p-3" style="height: 50%; width: 50%; border-radius: 50%;"><i class="bi bi-chat-dots text-light"></i></span>
+              <div class="w-100 text-center js-message-button-container" data-blog-id="${b.blog_id}">
               </div>
             </div>
           </div>
@@ -163,12 +178,17 @@ export class PublicFeedView {
         $container.append(this.createReactionButton(reaction, blogId));
       })
     })
+
+    this.$publicFeed.find('.js-message-button-container').each((_, container) => {
+      const $container = $(container);
+      const blogId = $container.data('blog-id');
+
+      $container.append(this.createCommentButton(window.message, blogId));
+    })
   }
 
   async showModal (action, blogToBeModified) {
     const modifyBlogModal = $('#modifyBlogModal');
-    
-    console.log(blogToBeModified)
 
     $('.modal-title').text(`${action} Blog`)
 
@@ -246,5 +266,54 @@ export class PublicFeedView {
     setTimeout(() => {
       $('.alert').removeClass('show');
     }, 3000)
+  }
+
+  // Reaction View Methods
+  async showReactionModal (reactions) {
+    const modifyBlogModal = $('#reactionsModal');
+    $('.js-reaction-modal-title').text('Reactions');
+    
+    let reactionsHTML = '';
+
+    $.each(reactions, (_, reaction) => {
+      reactionsHTML += `
+        <div class="mb-3 shadow-sm p-3 rounded" style="border: 1px solid lightgray">
+          <div class="d-flex align-items-center">
+            <img src="${window.reactions[reaction.type_id -1].src}" alt="" style="width: 25px">
+            <h5 class="ms-3 m-0">${reaction.reacted_by}</h5>
+          </div>
+          
+          <div class="text-end">
+            <span>${this.formatDate('Reacted', new Date(reaction.created_at))}</span>
+          </div>
+        </div>
+      `
+    })
+
+    $('.js-reaction-modal-content').html(reactionsHTML);
+
+    const modal = new bootstrap.Modal(modifyBlogModal);
+    modal.show();
+  }
+
+  async showCommentModal (comments, blogId) {
+    $('.js-comment-modal-content').empty();
+
+    const commentsModal = $('#commentsModal');
+    $('.js-comment-modal-title').text('Comments');
+
+    if (!comments) {
+      $('.js-comment-modal-content').html(`
+        <div class="text-center">Be the first one to comment</div>
+      `)
+
+      console.log(true)
+    }
+    else {
+
+    }
+
+    const modal = new bootstrap.Modal(commentsModal);
+    modal.show();
   }
 }

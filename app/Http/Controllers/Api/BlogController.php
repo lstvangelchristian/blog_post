@@ -11,7 +11,7 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::with(['author', 'reactions', 'comments'])->latest()->get();
+        $blogs = Blog::with(['author', 'reactions.user', 'comments'])->latest()->get();
 
         return BlogResource::collection($blogs);
     }

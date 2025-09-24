@@ -70,5 +70,23 @@ export class PublicFeedContr {
         await this.view.renderPublicFeed(updatedBlogs.data.data);
       }
     })
+
+    $(document).on('click', '.js-view-reactions', async (e) => {
+      const blogId = $(e.currentTarget).data('reactionBlogId');
+
+      const blogs = await this.model.getBlogs();
+
+      if (blogs.success) {
+        const blogReactionsToBeFetched = blogs.data.data.find(b => b.blog_id === blogId)
+
+        await this.view.showReactionModal(blogReactionsToBeFetched.reactions);
+      }
+    })
+
+    $(document).on('click', '.message-button', async (e) => {
+      const blogId = $(e.currentTarget).data('blogId');
+
+      await this.view.showCommentModal(false, blogId)
+    })
   }
 }

@@ -57,6 +57,41 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="reactionsModal" tabindex="-1" aria-labelledby="reactionsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title js-reaction-modal-title" id="reactionsModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="js-reaction-modal-content overflow-auto p-3" style="height: 500px;">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="commentsModal" tabindex="-1" aria-labelledby="reactionsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title js-comment-modal-title" id="reactionsModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="js-comment-modal-content overflow-auto p-3" style="height: 500px;">
+        </div>
+        
+        <div class="d-flex justify-content-center">
+          <textarea class="form-control me-1 rounded" rows="1" style="resize: none; border: 1px solid lightgray"></textarea>
+          <button class="btn btn-primary btn-sm rounded">Comment</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 <script>
@@ -69,6 +104,8 @@
     {type: 'sad', src: '{{ asset('images/reactions/sad.png') }}'},
     {type: 'angry', src: '{{ asset('images/reactions/angry.png') }}'}
   ]
+
+  window.message = '{{ asset('images/comment.png') }}'
 </script>
 
 @push('scripts')

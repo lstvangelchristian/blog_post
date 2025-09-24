@@ -15,7 +15,7 @@ class Blog extends Model
 
     public function reactions()
     {
-        return $this->hasMany(Reaction::class, 'blog_id');
+        return $this->hasMany(Reaction::class, 'blog_id')->latest();
     }
 
     public function comments()
