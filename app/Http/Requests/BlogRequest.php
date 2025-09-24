@@ -13,9 +13,15 @@ class BlogRequest extends FormRequest
 
     public function rules()
     {
-        return [
-            'content' => 'required',
-            'author_id' => 'required|integer',
-        ];
+        if ($this->isMethod('post')) {
+            return [
+                'content' => 'required',
+                'author_id' => 'required|integer',
+            ];
+        } else {
+            return [
+                'content' => 'required|string',
+            ];
+        }
     }
 }

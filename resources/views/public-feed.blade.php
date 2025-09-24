@@ -1,6 +1,7 @@
 @extends('layouts.default')
 
 @section('main-content')
+
 <div class="d-flex flex-column vh-100">
   <div>
     <h3 class="m-0">Create a blog</h3>
@@ -36,7 +37,39 @@
   <div class="position-fixed top-0 end-0 m-3 js-action-result" style="z-index: 1050;">
   </div>
 </div>
+
+<div class="modal fade" id="modifyBlogModal" tabindex="-1" aria-labelledby="modifyBlogModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifyBlogModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="js-modify-blog-form">
+        <div class="modal-body">
+          <div class="js-modify-blog-form-content p-3"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 @endsection
+
+<script>
+  window.reactions = [
+    {type: 'like', src: '{{ asset('images/reactions/like.png') }}'},
+    {type: 'love', src: '{{ asset('images/reactions/love.png') }}'},
+    {type: 'care', src: '{{ asset('images/reactions/care.png') }}'},
+    {type: 'haha', src: '{{ asset('images/reactions/haha.png') }}'},
+    {type: 'wow', src: '{{ asset('images/reactions/wow.png') }}'},
+    {type: 'sad', src: '{{ asset('images/reactions/sad.png') }}'},
+    {type: 'angry', src: '{{ asset('images/reactions/angry.png') }}'}
+  ]
+</script>
 
 @push('scripts')
 @vite('resources/js/main/public-feed.main.js')

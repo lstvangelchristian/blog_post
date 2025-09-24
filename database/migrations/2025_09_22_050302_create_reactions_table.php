@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('authors');
 
             $table->timestamps();
+
+            $table->unique(['blog_id', 'user_id']);
         });
     }
 

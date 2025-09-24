@@ -1,12 +1,13 @@
 export class PublicFeedModel {
   constructor () {
     this.baseUrl = '/dashboard/blog_post/public/api/blog';
+    this.reactionBaseUrl = '/dashboard/blog_post/public/api/reaction';
   }
 
-  async request (endpoint = '', method = 'GET', data = null) {
+  async request (baseUrl, endpoint = '', method = 'GET', data = null) {
     try {
       const res = await $.ajax({
-        url: `${this.baseUrl}${endpoint}`,
+        url: `${baseUrl}${endpoint}`,
         method: method,
         contentType: 'application/json',
         data: data ? JSON.stringify(data) : undefined
@@ -19,11 +20,29 @@ export class PublicFeedModel {
     }
   }
 
+  // Blog Methods
   async createBlog (newBlog) {
-    return this.request('', 'POST', newBlog);
+    return this.request(this.baseUrl, '', 'POST', newBlog);
   }
 
   async getBlogs () {
-    return this.request();
+    return this.request(this.baseUrl);
+  }
+
+  async getBlogById (id) {
+    return this.request(this.baseUrl, `/${id}`)
+  }
+
+  async updateBlog (id, updatedData) {
+    return this.request(this.baseUrl, `/${id}`, 'PUT', updatedData)
+  }
+
+  async deleteBlog (id) {
+    return this.request(this.baseUrl, `/${id}`, 'DELETE')
+  }
+
+  // Reaction Method
+  async createReaction (newReaction) {
+    return this.request(this.reactionBaseUrl, '', 'POST', newReaction);
   }
 }

@@ -23,9 +23,22 @@ class BlogController extends Controller
         return response()->json($createdBlog);
     }
 
-    public function show(string $id) {}
+    public function show(string $id)
+    {
+        return response()->json(Blog::findOrFail($id));
+    }
 
-    public function update(Request $request, string $id) {}
+    public function update(BlogRequest $request, string $id)
+    {
+        $blogToBeUpdated = Blog::findOrFail($id);
 
-    public function destroy(string $id) {}
+        $updatedBlog = $blogToBeUpdated->update($request->validated());
+
+        return response()->json($updatedBlog);
+    }
+
+    public function destroy(string $id)
+    {
+        return response()->json(Blog::findOrFail($id)->delete());
+    }
 }

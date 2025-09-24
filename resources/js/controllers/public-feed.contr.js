@@ -12,10 +12,63 @@ export class PublicFeedContr {
     
     await this.view.createBlog(async (newBlog) => {
       const result = await this.model.createBlog({...newBlog, author_id: 1});
-      await this.view.showResult(result);
+      await this.view.showResult('create', result);
 
       const updatedBlogs = await this.model.getBlogs();
       await this.view.renderPublicFeed(updatedBlogs.data.data);
+    })
+
+    $(document).on('click', '.js-blog-modal', async (e) => {
+      const action = $(e.currentTarget).data('action');
+      const id = $(e.currentTarget).data('id');
+
+      if (!id) return;
+      
+      const blogToBeModified = await this.model.getBlogById(id)
+
+      await this.view.showModal(action, blogToBeModified.data);
+    })
+
+    await this.view.modifyBlogFormOnSubmit(async (action, id, data) => {
+      let result = '';
+
+      if (!data) {
+        result = await this.model.deleteBlog(id)
+      }
+      else {
+        result = await this.model.updateBlog(id, data);
+      }
+
+      if (result.success) {
+        const updatedBlogs = await this.model.getBlogs();
+        await this.view.renderPublicFeed(updatedBlogs.data.data);
+
+        await this.view.hideModal();
+      }
+
+      await this.view.showResult(action, result);
+    })
+
+    $(document).on('click', '.reaction-button', async (e) => {
+      const staticSessionId = 1; // This is a static session id for testing purpose :)))
+
+      const blogId = $(e.currentTarget).data('blogId');
+      const reactionType = $(e.currentTarget).data('reactionType');
+
+      const reaction_id = { like: 1, love: 2, care: 3, haha: 4, wow: 5, sad: 6, angry: 7 }
+
+      const newReaction = {
+        blog_id: blogId,
+        type_id: reaction_id[reactionType],
+        user_id: staticSessionId
+      }
+
+      const result = await this.model.createReaction(newReaction);
+
+      if (result.success) {
+        const updatedBlogs = await this.model.getBlogs();
+        await this.view.renderPublicFeed(updatedBlogs.data.data);
+      }
     })
   }
 }
