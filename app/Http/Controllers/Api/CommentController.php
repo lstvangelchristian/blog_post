@@ -19,9 +19,11 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CommentRequest $request) 
+    public function store(CommentRequest $request)
     {
-        $newComment = C
+        $newComment = Comment::create($request->validated());
+
+        return response()->json($newComment);
     }
 
     /**
