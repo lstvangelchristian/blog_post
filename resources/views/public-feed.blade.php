@@ -73,7 +73,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="commentsModal" tabindex="-1" aria-labelledby="reactionsModalLabel" aria-hidden="true">
+<div class="modal fade modal-lg" id="commentsModal" tabindex="-1" aria-labelledby="reactionsModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -84,10 +84,9 @@
         <div class="js-comment-modal-content overflow-auto p-3" style="height: 500px;">
         </div>
         
-        <div class="d-flex justify-content-center">
-          <textarea class="form-control me-1 rounded" rows="1" style="resize: none; border: 1px solid lightgray"></textarea>
-          <button class="btn btn-primary btn-sm rounded">Comment</button>
-        </div>
+        <form class="js-comment-form">
+          <div class="d-flex justify-content-center js-comment-form-content"></div>
+        </form>
       </div>
     </div>
   </div>

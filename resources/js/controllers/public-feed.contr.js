@@ -86,7 +86,23 @@ export class PublicFeedContr {
     $(document).on('click', '.message-button', async (e) => {
       const blogId = $(e.currentTarget).data('blogId');
 
-      await this.view.showCommentModal(false, blogId)
+      const blogs = await this.model.getBlogs();
+
+      const blog = blogs.data.data.find(c => c.blog_id === blogId);
+
+      const comments = blog.comments;
+
+      console.log(comments);
+
+      await this.view.showCommentModal(comments, blogId)
+    })
+
+    await this.view.createComment(async (newComment) => {
+      if (!newComment.content) return;
+
+      const result = await this.model.createComment(newComment);
+
+      console.log(result);
     })
   }
 }

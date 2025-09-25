@@ -22,7 +22,13 @@ class BlogResource extends JsonResource
                     'created_at' => $reaction->created_at,
                 ];
             }),
-            'comments' => $this->comments,
+            'comments' => $this->comments->map(function ($comment) {
+                return [
+                    'content' => $comment->content,
+                    'commented_by' => $comment->user->username,
+                    'created_at' => $comment->created_at,
+                ];
+            }),
         ];
     }
 }

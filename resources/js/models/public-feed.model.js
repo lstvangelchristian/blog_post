@@ -2,6 +2,7 @@ export class PublicFeedModel {
   constructor () {
     this.baseUrl = '/dashboard/blog_post/public/api/blog';
     this.reactionBaseUrl = '/dashboard/blog_post/public/api/reaction';
+    this.commentBaseUrl = '/dashboard/blog_post/public/api/comment';
   }
 
   async request (baseUrl, endpoint = '', method = 'GET', data = null) {
@@ -44,5 +45,10 @@ export class PublicFeedModel {
   // Reaction Method
   async createReaction (newReaction) {
     return this.request(this.reactionBaseUrl, '', 'POST', newReaction);
+  }
+
+  // Comment Method
+  async createComment (newComment) {
+    return this.request(this.commentBaseUrl, '', 'POST', newComment);
   }
 }
