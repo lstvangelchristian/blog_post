@@ -13,7 +13,7 @@
       <div class="d-flex">
         <div class="bg-light d-flex align-items-center justify-content-center"
           style="width: 50px; height: 50px; border-radius: 50%;">
-            <h5 class="m-0">A</h5>
+            <h5 class="m-0 js-author-initial"></h5>
         </div>
 
         <div class="flex-grow-1 ms-3">

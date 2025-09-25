@@ -8,6 +8,8 @@ class Author extends Model
 {
     protected $fillable = ['username', 'password'];
 
+    protected $hidden = ['password'];
+
     public function blogs()
     {
         return $this->hasMany(Blog::class, 'author_id');

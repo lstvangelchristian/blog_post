@@ -1,6 +1,6 @@
 export class PublicFeedView {
     constructor() {
-        this.staticSessionId = 1; 
+        this.authorSession = JSON.parse(localStorage.getItem('author-session'));
 
         this.$createBlogField = $(".js-create-blog-field");
         this.$createBlogForm = $(".js-create-blog-form");
@@ -12,6 +12,11 @@ export class PublicFeedView {
         this.$modifyBlogForm = $(".js-modify-blog-form");
 
         this.$reactionButtonContainer = $(".js-reaction-button-container");
+    }
+
+    async renderAuthorInformation () {
+        $('.js-author-name').text(this.authorSession.username)
+        $('.js-author-initial').text(this.authorSession.username.charAt(0));
     }
 
     async changeUi() {
@@ -103,7 +108,7 @@ export class PublicFeedView {
         this.$publicFeed.empty();
 
         if (blogs.length === 0) {
-            console.log("no blogs found");
+            this.$publicFeed.html('<h5 class="text-center mt-5">Be the first one to create a blog</h5>');
             return;
         }
 
@@ -111,14 +116,14 @@ export class PublicFeedView {
 
         $.each(blogs, (_, b) => {
             const currentUserReaction = b.reactions.find(
-                (r) => r.user_id === this.staticSessionId
+                (r) => r.user_id === this.authorSession.id
             );
 
             blogsHTML += `
         <div class="mt-3 p-3 shadow-sm rounded" style="border: 1px solid lightgray !important;">
 
           ${
-              b.author_id === this.staticSessionId
+              b.author_id === this.authorSession.id
                   ? `
               <div class="text-end mb-3">
                 <button class="btn btn-warning rounded js-blog-modal" data-action="update" data-id="${b.blog_id}">
@@ -384,10 +389,16 @@ export class PublicFeedView {
             const newComment = {
                 content: commentForm.get("comment"),
                 blog_id: commentForm.get("blog-id"),
-                user_id: this.staticSessionId,
+                user_id: this.authorSession.id
             };
 
             callback(newComment)
         });
+    }
+
+    async logout (callback) {
+        $('.js-logout').on('click', () => {
+            callback(true)
+        })
     }
 }

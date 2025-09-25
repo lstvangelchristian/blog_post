@@ -9,11 +9,11 @@
   <div class="row mt-5 align-items-center">
 
     <div class="col-3">
-      <h1 class=" text-center bg-light m-0 p-3" style="border-radius: 100%;">A</h1>
+      <h1 class=" text-center bg-light m-0 p-3 js-author-initial" style="border-radius: 100%;"></h1>
     </div>
 
     <div class="col-9">
-      <h5 class="m-0">Angel Christian Llavan Torrejos</h5>
+      <h5 class="m-0 js-author-name"></h5>
       <span>Author</span>
     </div>
 
@@ -33,7 +33,6 @@
 
   <!-- nav logout -->
   <div class="text-center mt-auto mb-5">
-    <a href="#" class="text-decoration-none">Logout</a>
+    <a href="#" class="text-decoration-none js-logout">Logout</a>
   </div>
-
 </div>

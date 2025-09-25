@@ -1,0 +1,1 @@
+export const authorSession = JSON.parse(localStorage.getItem('author-session')) || [];

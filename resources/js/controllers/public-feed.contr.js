@@ -1,17 +1,25 @@
 export class PublicFeedContr {
-  constructor (model, view) {
+  constructor (authorSession, model, view) {
+    this.authorSession = authorSession;
     this.model = model;
     this.view = view;
   }
 
   async init () {
+    if (this.authorSession.length === 0) {
+      location.href = 'http://localhost/dashboard/blog_post/public/';
+      return;
+    }
+
+    await this.view.renderAuthorInformation();
+
     await this.view.changeUi();
 
     const blogs = await this.model.getBlogs();
     await this.view.renderPublicFeed(blogs.data.data);
     
     await this.view.createBlog(async (newBlog) => {
-      const result = await this.model.createBlog({...newBlog, author_id: 1});
+      const result = await this.model.createBlog({...newBlog, author_id: this.authorSession.id});
       await this.view.showResult('create', result);
 
       const updatedBlogs = await this.model.getBlogs();
@@ -50,7 +58,7 @@ export class PublicFeedContr {
     })
 
     $(document).on('click', '.reaction-button', async (e) => {
-      const staticSessionId = 1; // This is a static session id for testing purpose :)))
+      const userId = this.authorSession.id;
 
       const blogId = $(e.currentTarget).data('blogId');
       const reactionType = $(e.currentTarget).data('reactionType');
@@ -60,7 +68,7 @@ export class PublicFeedContr {
       const newReaction = {
         blog_id: blogId,
         type_id: reaction_id[reactionType],
-        user_id: staticSessionId
+        user_id: userId
       }
 
       const result = await this.model.createReaction(newReaction);
@@ -104,11 +112,20 @@ export class PublicFeedContr {
 
       const blogs = await this.model.getBlogs();
 
+
       const blog = blogs.data.data.find(c => c.blog_id === Number(commentSectionBlogId));
 
       const updatedComments = blog.comments
 
       await this.view.showCommentModal(updatedComments, commentSectionBlogId)
+    })
+
+    await this.view.logout((logout) => {
+      if (logout) {
+        localStorage.removeItem('author-session');
+
+        location.href = 'http://localhost/dashboard/blog_post/public/';
+      }
     })
   }
 }
