@@ -92,17 +92,23 @@ export class PublicFeedContr {
 
       const comments = blog.comments;
 
-      console.log(comments);
-
       await this.view.showCommentModal(comments, blogId)
     })
 
     await this.view.createComment(async (newComment) => {
       if (!newComment.content) return;
 
-      const result = await this.model.createComment(newComment);
+      await this.model.createComment(newComment);
 
-      console.log(result);
+      const commentSectionBlogId = newComment.blog_id;
+
+      const blogs = await this.model.getBlogs();
+
+      const blog = blogs.data.data.find(c => c.blog_id === Number(commentSectionBlogId));
+
+      const updatedComments = blog.comments
+
+      await this.view.showCommentModal(updatedComments, commentSectionBlogId)
     })
   }
 }

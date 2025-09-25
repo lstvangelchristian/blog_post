@@ -1,6 +1,6 @@
 export class PublicFeedView {
     constructor() {
-        this.staticSessionId = 1; // For Testing Purposes
+        this.staticSessionId = 1; 
 
         this.$createBlogField = $(".js-create-blog-field");
         this.$createBlogForm = $(".js-create-blog-form");
@@ -336,19 +336,23 @@ export class PublicFeedView {
     }
 
     async showCommentModal(comments, blogId) {
-        console.log(comments);
-
-        $(".js-comment-modal-content").empty();
-
-        const commentsModal = $("#commentsModal");
+        // $(".js-comment-modal-content").empty();
         $(".js-comment-modal-title").text("Comments");
 
         $(".js-comment-form-content").html(`
-      <input type="hidden" name="blog-id" value="${blogId}">
-      <textarea class="form-control me-1 rounded" name="comment" rows="1" style="resize: none; border: 1px solid lightgray"></textarea>
-      <button class="btn btn-primary btn-sm rounded">Comment</button>
-    `);
+            <input type="hidden" name="blog-id" value="${blogId}">
+            <textarea class="form-control me-1 rounded" name="comment" rows="1" style="resize: none; border: 1px solid lightgray"></textarea>
+            <button class="btn btn-primary btn-sm rounded">Comment</button>
+        `);
 
+        this.renderComments(comments)
+
+        const commentsModal = $("#commentsModal");
+        const modal = bootstrap.Modal.getInstance(commentsModal[0]) || new bootstrap.Modal(commentsModal[0]);
+        modal.show();
+    }
+
+    async renderComments(comments) {
         if (comments.length === 0) {
             $(".js-comment-modal-content").html(`
         <div class="text-center">Be the first one to comment</div>
@@ -369,9 +373,6 @@ export class PublicFeedView {
           
             $(".js-comment-modal-content").html(commentsHTML);
         }
-
-        const modal = new bootstrap.Modal(commentsModal);
-        modal.show();
     }
 
     async createComment(callback) {
@@ -386,7 +387,7 @@ export class PublicFeedView {
                 user_id: this.staticSessionId,
             };
 
-            callback(newComment);
+            callback(newComment)
         });
     }
 }
