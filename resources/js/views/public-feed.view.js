@@ -78,14 +78,25 @@ export class PublicFeedView {
             class: `reaction-button`,
             "data-reaction-type": reaction.type,
             "data-blog-id": blogId,
-            css: { padding: "10px", cursor: "pointer" },
-        }).append(
-            $("<img>", {
-                src: reaction.src,
-                css: { width: "40px" },
-            })
-        );
+            css: { padding: "10px", cursor: "pointer", display: "inline-block" },
+        })
+        
+        const img = $("<img>", {
+            src: reaction.src,
+            css: { width: "40px", transition: "transform 0.2s ease" },
+        })
 
+        img.hover(
+            function() {
+                $(this).css("transform", "scale(1.2)");
+            },
+            function() {
+                $(this).css("transform", "scale(1)");
+            }
+        )
+
+        reactionButton.append(img);
+            
         return reactionButton;
     }
 
