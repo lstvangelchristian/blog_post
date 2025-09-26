@@ -24,6 +24,8 @@ class BlogResource extends JsonResource
             }),
             'comments' => $this->comments->map(function ($comment) {
                 return [
+                    'comment_by_id' => $comment->user_id,
+                    'comment_id' => $comment->id,
                     'content' => $comment->content,
                     'commented_by' => $comment->user->username,
                     'created_at' => $comment->created_at,

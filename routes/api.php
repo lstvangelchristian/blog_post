@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ReactionController;

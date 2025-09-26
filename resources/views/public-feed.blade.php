@@ -69,7 +69,7 @@
         <div class="js-reaction-modal-content overflow-auto p-3" style="height: 500px;">
         </div>
       </div>
-    </div>
+    </div>  
   </div>
 </div>
 
@@ -89,6 +89,27 @@
         </form>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="modal fade mt-5" id="deleteCommentModal" tabindex="-1" aria-labelledby="deleteCommentModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title js-delete-comment-title" id="deleteCommentModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="js-delete-comment-form">
+        <div class="modal-body">
+          <div class="js-delete-comment-form-content"></div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Confirm</button>
+        </div>
+      </form>
+    </div>  
   </div>
 </div>
 @endsection

@@ -367,11 +367,29 @@ export class PublicFeedView {
             $.each(comments, (_, comment) => {
               commentsHTML += `
                 <div class="shadow-sm p-3 rounded mt-3" style="border: 1px solid lightgray">
-                  <h5>${comment.commented_by}</h5>
-                  <div class="p-3 shadow-sm rounded" style="border: 1px solid lightgray">${comment.content}</div>
-                  <div class="text-end mt-3">
-                    <span>${this.formatDate('Commented', new Date(comment.created_at))}</span>
-                  </div>
+
+                    <div class="js-cancel-edit-comment-${comment.comment_id} text-end"></div>
+
+                    ${comment.comment_by_id === this.authorSession.id 
+                        ? `<div class="modify-comment-container-${comment.comment_id} text-end">
+                            <button class="btn btn-warning rounded js-modify-comment-button" data-action="update" data-comment-id="${comment.comment_id}" data-comment-content="${comment.content}">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+
+                            <button class="btn btn-danger rounded js-modify-comment-button" data-action="delete" data-comment-id="${comment.comment_id}" data-comment-content="${comment.content}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>`
+                        : ''
+                    }
+
+                    <h5>${comment.commented_by}</h5>
+
+                    <div class="p-3 shadow-sm rounded js-edit-comment-${comment.comment_id}" style="border: 1px solid lightgray">${comment.content}</div>
+                  
+                    <div class="text-end mt-3">
+                        <span>${this.formatDate('Commented', new Date(comment.created_at))}</span>
+                    </div>
                 </div>
               `
             })
@@ -394,6 +412,67 @@ export class PublicFeedView {
 
             callback(newComment)
         });
+    }
+
+    async makeCommentEditable (comment) {
+        const commentToBeUpdated = $(`.js-edit-comment-${comment.id}`);
+
+        commentToBeUpdated.empty();
+
+        commentToBeUpdated.html(`
+            <form class="js-update-comment-form">
+                <input type="hidden" name="comment-id" value="${comment.id}">
+                <textarea class="form-control auto-resize" name="comment" rows="3">${comment.content}</textarea>
+                <div class="text-end mt-3">
+                    <button type="submit" class="btn btn-primary btn-sm rounded">Update</button>
+                </div>
+            </form>
+        `)
+
+        const updateCommentButtonActions = $(`.modify-comment-container-${comment.id}`);
+
+        updateCommentButtonActions.empty();
+
+        $(`.js-cancel-edit-comment-${comment.id}`).html(
+            `<button class="btn btn-danger rounded js-cancel-edit-button-${comment.id}">
+                <i class="bi bi-x-lg"></i>
+            </button>`
+        )
+
+
+
+        $(`.js-cancel-edit-button-${comment.id}`).on('click', () => {
+            updateCommentButtonActions.html(
+                `
+                    <button class="btn btn-warning rounded js-modify-comment-button" data-action="update" data-comment-id="${comment.id}" data-comment-content="${comment.content}">
+                        <i class="bi bi-pencil-square"></i>
+                    </button>
+
+                    <button class="btn btn-danger rounded js-modify-comment-button" data-action="delete" data-comment-id="${comment.id}" data-comment-content="${comment.content}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `
+            )
+
+            commentToBeUpdated.empty();
+
+            commentToBeUpdated.text(`${comment.content}`);
+
+            $(`.js-cancel-edit-comment-${comment.id}`).empty();
+        })
+    }
+
+    async showDeleteConfirmation (id) {
+        $(".js-delete-comment-title").text("Delete Comment");
+
+        $(".js-delete-comment-form-content").html(`
+            <input type="hidden" name="comment-id" value="${id}">
+            <span class="text-center text-danger">Are you sure you really want to delete this comment? This cannot be undone.</span>
+        `);
+
+        const commentsModal = $("#deleteCommentModal");
+        const modal = bootstrap.Modal.getInstance(commentsModal[0]) || new bootstrap.Modal(commentsModal[0]);
+        modal.show();
     }
 
     async logout (callback) {

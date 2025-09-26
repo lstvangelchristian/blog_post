@@ -127,5 +127,74 @@ export class PublicFeedContr {
         location.href = 'http://localhost/dashboard/blog_post/public/';
       }
     })
+
+    $(document).on('click', '.js-modify-comment-button', async (e) => {
+      const comment = {
+        action: $(e.currentTarget).data('action'),
+        id: $(e.currentTarget).data('commentId'),
+        content: $(e.currentTarget).data('commentContent')
+      }
+
+      if (comment.action === 'update') {
+        await this.view.makeCommentEditable(comment)
+      }
+
+      if (comment.action === 'delete') {
+        await this.view.showDeleteConfirmation(comment.id);
+      } 
+    })
+
+    $(document).on('submit', '.js-update-comment-form', async (e) => {
+      e.preventDefault();
+
+      const form = e.currentTarget;
+      const updateCommentFormData = new FormData(form);
+
+      const commentId = updateCommentFormData.get('comment-id');
+      const comment = { content: updateCommentFormData.get('comment') };
+
+      const result = await this.model.updateComment(commentId, comment);
+
+      if (result.success) {
+        const commentSectionBlogId = result.data.blog_id;
+
+        const blogs = await this.model.getBlogs();
+
+
+        const blog = blogs.data.data.find(c => c.blog_id === Number(commentSectionBlogId));
+
+        const updatedComments = blog.comments
+
+        await this.view.showCommentModal(updatedComments, commentSectionBlogId)
+      }
+    });
+
+    $(document).on('submit', '.js-delete-comment-form', async (e) => {
+      e.preventDefault();
+
+      const form = e.currentTarget;
+      const deleteCommentFormData = new FormData(form);
+
+      const commentId = deleteCommentFormData.get('comment-id');
+
+      const result = await this.model.deleteComment(commentId);
+
+      if (result.success) {
+        const commentSectionBlogId = result.data.blog_id;
+
+        const blogs = await this.model.getBlogs();
+
+
+        const blog = blogs.data.data.find(c => c.blog_id === Number(commentSectionBlogId));
+
+        const updatedComments = blog.comments
+
+        await this.view.showCommentModal(updatedComments, commentSectionBlogId)
+
+        const commentsModal = $("#deleteCommentModal");
+        const modal = bootstrap.Modal.getInstance(commentsModal[0]) || new bootstrap.Modal(commentsModal[0]);
+        modal.hide();
+      }
+    })
   }
 }

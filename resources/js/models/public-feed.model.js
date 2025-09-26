@@ -51,4 +51,12 @@ export class PublicFeedModel {
   async createComment (newComment) {
     return this.request(this.commentBaseUrl, '', 'POST', newComment);
   }
+
+  async updateComment (id, comment) {
+    return this.request(this.commentBaseUrl, `/${id}`, 'PUT', comment);
+  }
+
+  async deleteComment (id) {
+    return this.request(this.commentBaseUrl, `/${id}`, 'DELETE');
+  }
 }
