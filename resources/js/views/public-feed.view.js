@@ -465,6 +465,8 @@ export class PublicFeedView {
                 `
             )
 
+            
+
             commentToBeUpdated.empty();
 
             commentToBeUpdated.text(`${comment.content}`);
